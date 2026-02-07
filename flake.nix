@@ -19,7 +19,7 @@
     packages = forAllSystems (system: let
       pkgs = nixpkgs.legacyPackages.${system};
     in {
-      bitwarden = pkgs.callPackage ./package.nix {};
+      bitwarden = pkgs.callPackage ./nix/bitwarden.nix {};
       default = self.packages.${system}.bitwarden;
     });
   };

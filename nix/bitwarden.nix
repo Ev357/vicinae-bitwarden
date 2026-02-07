@@ -5,7 +5,7 @@ pkgs.buildNpmPackage rec {
 
   src = builtins.path {
     name = pname;
-    path = ./.;
+    path = ../.;
   };
 
   npmDeps = pkgs.importNpmLock {npmRoot = src;};
