@@ -1,4 +1,4 @@
-import { LocalStorage } from "@raycast/api";
+import { LocalStorage } from "@vicinae/api";
 import { useEffect, useReducer } from "react";
 import { LOCAL_STORAGE_KEY } from "~/constants/general";
 import { PasswordGeneratorOptions } from "~/types/passwords";

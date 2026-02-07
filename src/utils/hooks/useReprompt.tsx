@@ -1,4 +1,4 @@
-import { showToast, Toast, useNavigation } from "@raycast/api";
+import { showToast, Toast, useNavigation } from "@vicinae/api";
 import RepromptForm from "~/components/RepromptForm";
 import { useSession } from "~/context/session";
 

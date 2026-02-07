@@ -1,4 +1,4 @@
-import { getPreferenceValues as _getPreferenceValues } from "@raycast/api";
+import { getPreferenceValues as _getPreferenceValues } from "@vicinae/api";
 import { useContentEncryptor } from "~/utils/hooks/useContentEncryptor";
 
 const getPreferenceValues = _getPreferenceValues as jest.Mock;

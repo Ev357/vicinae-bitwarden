@@ -1,4 +1,4 @@
-import { Form } from "@raycast/api";
+import { Form } from "@vicinae/api";
 import { useForm } from "@raycast/utils";
 import { useEffect } from "react";
 

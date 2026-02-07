@@ -1,7 +1,6 @@
-import { Action, ActionPanel, Clipboard, Form, Icon, PopToRootType, showHUD, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Clipboard, Form, Icon, PopToRootType, showHUD, showToast, Toast } from "@vicinae/api";
 import { FormValidation, useForm } from "@raycast/utils";
-import { useEffect, useState } from "react";
-import { DebuggingBugReportingActionSection } from "~/components/actions";
+import { type ComponentProps, useEffect, useState } from "react";
 import RootErrorBoundary from "~/components/RootErrorBoundary";
 import VaultListenersProvider from "~/components/searchVault/context/vaultListeners";
 import { FOLDER_OPTIONS } from "~/constants/general";
@@ -9,7 +8,6 @@ import { BitwardenProvider, useBitwarden } from "~/context/bitwarden";
 import { SessionProvider } from "~/context/session";
 import { useVaultContext, VaultProvider } from "~/context/vault";
 import { getPasswordGeneratorOptions } from "./utils/passwords";
-import { platform } from "~/utils/platform";
 
 type CreateLoginFormValues = {
   name: string;
@@ -119,9 +117,9 @@ function CreateLoginComponent() {
     }
   };
 
-  const passwordFieldProps: Partial<Form.TextField.Props> = {
+  const passwordFieldProps: Partial<ComponentProps<typeof Form.PasswordField>> = {
     title: "Password",
-    placeholder: "Enter password",
+    info: "Enter password",
     onChange: (value: string) => {
       itemProps.visiblePassword.onChange?.(value);
       itemProps.hiddenPassword.onChange?.(value);
@@ -133,25 +131,31 @@ function CreateLoginComponent() {
       isLoading={isSubmitting}
       actions={
         <ActionPanel>
-          <Action.SubmitForm title="Create Login" onSubmit={handleSubmit} icon={Icon.NewDocument} />
+          <Action.SubmitForm
+            title="Create Login"
+            onSubmit={async (event) => {
+              // @ts-expect-error
+              await handleSubmit(event);
+            }}
+            icon={Icon.NewDocument}
+          />
           <Action
             icon={showPassword ? Icon.EyeDisabled : Icon.Eye}
             title={showPassword ? "Hide Password" : "Show Password"}
             onAction={togglePasswordVisibility}
-            shortcut={{ macOS: { key: "e", modifiers: ["opt"] }, Windows: { key: "e", modifiers: ["alt"] } }}
+            shortcut={{ key: "e", modifiers: ["cmd"] }}
           />
           <Action
             icon={Icon.Key}
             title="Generate Password"
             onAction={generatePassword}
-            shortcut={{ macOS: { key: "g", modifiers: ["opt"] }, Windows: { key: "g", modifiers: ["alt"] } }}
+            shortcut={{ key: "g", modifiers: ["cmd"] }}
           />
-          <DebuggingBugReportingActionSection />
         </ActionPanel>
       }
     >
-      <Form.TextField {...itemProps.name} title="Name" placeholder="GitHub, Gmail" storeValue={false} />
-      <Form.Dropdown {...itemProps.folderId} title="Folder" placeholder="Select folder" storeValue={false}>
+      <Form.TextField {...itemProps.name} title="Name" info="GitHub, Gmail" storeValue={false} />
+      <Form.Dropdown {...itemProps.folderId} title="Folder" info="Select folder" storeValue={false}>
         {folders.map((folder) => (
           <Form.Dropdown.Item
             key={folder.id}
@@ -161,8 +165,8 @@ function CreateLoginComponent() {
           />
         ))}
       </Form.Dropdown>
-      <Form.TextField {...itemProps.username} title="Username" placeholder="john.doe@mail.com" storeValue={false} />
-      <Form.TextField {...itemProps.uri} title="Website URI" placeholder="example.com" storeValue={false} />
+      <Form.TextField {...itemProps.username} title="Username" info="john.doe@mail.com" storeValue={false} />
+      <Form.TextField {...itemProps.uri} title="Website URI" info="example.com" storeValue={false} />
       {showPassword ? (
         <Form.TextField {...itemProps.visiblePassword} {...passwordFieldProps} />
       ) : (
@@ -170,9 +174,7 @@ function CreateLoginComponent() {
       )}
       <Form.Description
         title=""
-        text={`Press ${platform === "macos" ? "⌥" : "Alt"}+E to ${showPassword ? "hide" : "show"} password\nPress ${
-          platform === "macos" ? "⌥" : "Alt"
-        }+G to generate password`}
+        text={`Press Cmd+E to ${showPassword ? "hide" : "show"} password\nPress Cmd+G to generate password`}
       />
     </Form>
   );

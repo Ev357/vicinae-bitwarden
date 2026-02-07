@@ -1,4 +1,4 @@
-import { Clipboard, Icon, showToast, Toast } from "@raycast/api";
+import { Clipboard, Icon, showToast, Toast } from "@vicinae/api";
 import ActionWithReprompt from "~/components/actions/ActionWithReprompt";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
 import useGetUpdatedVaultItem from "~/components/searchVault/utils/useGetUpdatedVaultItem";
@@ -20,7 +20,7 @@ function CopyPublicKeyAction() {
         "Getting public key..."
       );
       if (publicKey) {
-        await Clipboard.copy(publicKey, { transient: getTransientCopyPreference("other") });
+        await Clipboard.copy(publicKey, { concealed: getTransientCopyPreference("other") });
         await showCopySuccessMessage("Copied public key to clipboard");
       }
     } catch (error) {

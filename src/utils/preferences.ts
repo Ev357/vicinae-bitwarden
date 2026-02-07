@@ -1,4 +1,4 @@
-import { environment, getPreferenceValues } from "@raycast/api";
+import { environment, getPreferenceValues } from "@vicinae/api";
 import { VAULT_TIMEOUT_MS_TO_LABEL } from "~/constants/labels";
 import { CommandName } from "~/types/general";
 

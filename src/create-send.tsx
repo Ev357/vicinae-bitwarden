@@ -1,10 +1,11 @@
-import { Form, LaunchType, PopToRootType, launchCommand, showHUD } from "@raycast/api";
+import { Form, LaunchType, PopToRootType, showHUD } from "@vicinae/api";
 import RootErrorBoundary from "~/components/RootErrorBoundary";
 import { BitwardenProvider, useBitwarden } from "~/context/bitwarden";
 import { SessionProvider } from "~/context/session";
 import { SendDateOption, SendCreatePayload, SendType, Send } from "~/types/send";
 import { SendDateOptionsToHourOffsetMap } from "~/constants/send";
 import { CreateEditSendForm, SendFormValues, sendFormInitialValues } from "~/components/send/CreateEditSendForm";
+import { launchCommand } from "@raycast/api";
 
 const LoadingFallback = () => <Form isLoading />;
 
@@ -107,6 +108,7 @@ function CreateSendCommandContent({ send, onSuccess: onParentSuccess }: CreateEd
     } else if (wasUrlCopiedToClipboard) {
       await showHUD("Send URL copied to clipboard", { popToRootType: PopToRootType.Immediate });
     } else {
+      // TODO: fix later
       await launchCommand({ type: LaunchType.UserInitiated, name: "search-sends" });
     }
   };

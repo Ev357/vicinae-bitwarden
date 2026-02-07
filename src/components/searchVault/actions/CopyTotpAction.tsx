@@ -1,4 +1,4 @@
-import { Clipboard, Icon, showToast, Toast } from "@raycast/api";
+import { Clipboard, Icon, showToast, Toast } from "@vicinae/api";
 import ActionWithReprompt from "~/components/actions/ActionWithReprompt";
 import { useBitwarden } from "~/context/bitwarden";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
@@ -22,7 +22,7 @@ function CopyTotpAction() {
       if (error) throw error;
 
       await toast?.hide();
-      await Clipboard.copy(totp, { transient: getTransientCopyPreference("other") });
+      await Clipboard.copy(totp, { concealed: getTransientCopyPreference("other") });
       await showCopySuccessMessage("Copied code to clipboard");
     } catch (error) {
       toast.message = "Failed to get TOTP";
@@ -34,9 +34,9 @@ function CopyTotpAction() {
   return (
     <ActionWithReprompt
       title="Copy TOTP"
-      icon={Icon.Clipboard}
+      icon={Icon.CopyClipboard}
       onAction={copyTotp}
-      shortcut={{ macOS: { key: "t", modifiers: ["opt"] }, Windows: { key: "t", modifiers: ["alt"] } }}
+      shortcut={{ key: "t", modifiers: ["cmd"] }}
       repromptDescription={`Copying the TOTP of <${selectedItem.name}>`}
     />
   );

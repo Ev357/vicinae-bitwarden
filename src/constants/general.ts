@@ -1,6 +1,6 @@
 /* Put constants that you feel like they still don't deserve a file of their own here */
 
-import { Icon, Keyboard } from "@raycast/api";
+import { Icon, type KeyEquivalent } from "@vicinae/api";
 import { ItemType } from "~/types/vault";
 
 export const DEFAULT_SERVER_URL = "https://bitwarden.com";
@@ -27,7 +27,7 @@ export const VAULT_LOCK_MESSAGES = {
   CLI_UPDATED: "Bitwarden has been updated. Please login again.",
 } as const;
 
-export const SHORTCUT_KEY_SEQUENCE: Keyboard.KeyEquivalent[] = [
+export const SHORTCUT_KEY_SEQUENCE: KeyEquivalent[] = [
   "1",
   "2",
   "3",
@@ -82,9 +82,9 @@ export const CACHE_KEYS = {
 } as const;
 
 export const ITEM_TYPE_TO_ICON_MAP: Record<ItemType, Icon> = {
-  [ItemType.LOGIN]: Icon.Globe,
+  [ItemType.LOGIN]: Icon.Globe01,
   [ItemType.CARD]: Icon.CreditCard,
   [ItemType.IDENTITY]: Icon.Person,
-  [ItemType.NOTE]: Icon.Document,
+  [ItemType.NOTE]: Icon.BlankDocument,
   [ItemType.SSH_KEY]: Icon.Key,
 };

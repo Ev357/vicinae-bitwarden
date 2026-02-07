@@ -1,4 +1,4 @@
-import { Action, ActionPanel, environment, getPreferenceValues } from "@raycast/api";
+import { Action, ActionPanel, environment, getPreferenceValues } from "@vicinae/api";
 import ComponentReverser from "~/components/ComponentReverser";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
 import {
@@ -20,7 +20,6 @@ import {
 } from "~/components/searchVault/actions";
 import { ItemType } from "~/types/vault";
 import FavoriteItemActions from "~/components/searchVault/actions/FavoriteItemActions";
-import { DebuggingBugReportingActionSection } from "~/components/actions";
 import CopyKeyFingerprintAction from "./actions/CopyKeyFingerprintAction";
 import CopyPrivateKeyAction from "./actions/CopyPrivateKeyAction";
 import { VaultActionsSection } from "~/components/actions";
@@ -92,7 +91,6 @@ const VaultItemActionPanel = () => {
         <FavoriteItemActions />
       </ActionPanel.Section>
       <VaultActionsSection />
-      <DebuggingBugReportingActionSection />
       {environment.isDevelopment && (
         <ActionPanel.Section title="Development">
           <Action.CopyToClipboard title="Copy item UUID" content={id} />

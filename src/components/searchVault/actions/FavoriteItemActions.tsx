@@ -1,4 +1,4 @@
-import { Action, Icon, Toast, showToast } from "@raycast/api";
+import { Action, Icon, Toast, showToast } from "@vicinae/api";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
 import { useFavoritesContext } from "~/context/favorites";
 import { captureException } from "~/utils/development";
@@ -12,7 +12,7 @@ function FavoriteItemActions() {
 
   const handleToggleFavorite = async () => {
     try {
-      await toggleFavorite(selectedItem);
+      toggleFavorite(selectedItem);
     } catch (error) {
       await showToast(Toast.Style.Failure, "Failed to toggle favorite ☹️");
       captureException("Failed to toggle favorite", error);
@@ -28,7 +28,7 @@ function FavoriteItemActions() {
           title={isLocalFavorite ? "Remove Favorite" : "Mark As Favorite"}
           onAction={handleToggleFavorite}
           icon={isLocalFavorite ? Icon.StarDisabled : Icon.Star}
-          shortcut={{ macOS: { key: "f", modifiers: ["opt"] }, Windows: { key: "f", modifiers: ["alt"] } }}
+          shortcut={{ key: "f", modifiers: ["cmd"] }}
         />
       )}
       {(isBitwardenFavorite || isLocalFavorite) && (
@@ -38,8 +38,8 @@ function FavoriteItemActions() {
             onAction={handleMoveFavorite("up")}
             icon={Icon.ArrowUpCircleFilled}
             shortcut={{
-              macOS: { key: "arrowUp", modifiers: ["opt", "shift"] },
-              Windows: { key: "arrowUp", modifiers: ["alt", "shift"] },
+              key: "arrowUp",
+              modifiers: ["cmd", "shift"],
             }}
           />
           <Action
@@ -47,8 +47,8 @@ function FavoriteItemActions() {
             onAction={handleMoveFavorite("down")}
             icon={Icon.ArrowDownCircleFilled}
             shortcut={{
-              macOS: { key: "arrowDown", modifiers: ["opt", "shift"] },
-              Windows: { key: "arrowDown", modifiers: ["alt", "shift"] },
+              key: "arrowDown",
+              modifiers: ["cmd", "shift"],
             }}
           />
         </>

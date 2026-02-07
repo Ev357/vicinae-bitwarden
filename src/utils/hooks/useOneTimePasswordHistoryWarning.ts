@@ -1,4 +1,4 @@
-import { confirmAlert, Icon, LocalStorage, popToRoot } from "@raycast/api";
+import { confirmAlert, Icon, LocalStorage, popToRoot } from "@vicinae/api";
 import { useEffect } from "react";
 import { LOCAL_STORAGE_KEY } from "~/constants/general";
 
@@ -14,7 +14,7 @@ const useOneTimePasswordHistoryWarning = () => {
     await confirmAlert({
       title: "Warning",
       message: "Password history is not available yet, so make sure to store the password after generating it!",
-      icon: Icon.ExclamationMark,
+      icon: Icon.Exclamationmark,
       dismissAction: {
         title: "Go back",
         onAction: handleDismissAction,

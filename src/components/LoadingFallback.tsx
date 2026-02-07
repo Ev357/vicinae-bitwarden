@@ -1,3 +1,3 @@
-import { Form } from "@raycast/api";
+import { Form } from "@vicinae/api";
 
 export const LoadingFallback = () => <Form isLoading />;

@@ -1,4 +1,4 @@
-import { Icon } from "@raycast/api";
+import { Icon } from "@vicinae/api";
 import { Searcher } from "fast-fuzzy";
 import { useMemo, useState } from "react";
 import { URL } from "url";
@@ -10,7 +10,7 @@ export function faviconUrl(url: string): string {
     const domain = new URL(url).hostname;
     return `https://icons.bitwarden.net/${domain}/icon.png`;
   } catch (err) {
-    return Icon.Globe;
+    return Icon.Globe01;
   }
 }
 

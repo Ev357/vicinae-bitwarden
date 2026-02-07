@@ -1,4 +1,4 @@
-import { List } from "@raycast/api";
+import { List } from "@vicinae/api";
 import VaultItemActionPanel from "~/components/searchVault/ItemActionPanel";
 import VaultItemContext from "~/components/searchVault/context/vaultItem";
 import { useItemAccessories } from "~/components/searchVault/utils/useItemAccessories";

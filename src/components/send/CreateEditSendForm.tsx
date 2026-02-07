@@ -1,10 +1,9 @@
-import { Action, ActionPanel, Clipboard, Form, Toast, showToast } from "@raycast/api";
+import { Action, ActionPanel, Clipboard, Form, Toast, showToast } from "@vicinae/api";
 import { FormValidation, useCachedState, useForm } from "@raycast/utils";
 import { Send, SendDateOption, SendType } from "~/types/send";
 import { captureException } from "~/utils/development";
 import { SendTypeOptions } from "~/constants/send";
 import { PremiumFeatureError } from "~/utils/errors";
-import { DebuggingBugReportingActionSection } from "~/components/actions";
 
 const validateOptionalDateUnder31Days = (value: Date | null | undefined) => {
   if (!value) return;
@@ -100,7 +99,9 @@ export const CreateEditSendForm = ({
       if (shouldCopyOnSave) {
         await Clipboard.copy(result.accessUrl);
         toast.message = "URL copied to clipboard";
-      } else {
+      }
+      // TODO: fix later
+      /* else {
         toast.primaryAction = {
           title: "Copy URL",
           onAction: async () => {
@@ -108,7 +109,7 @@ export const CreateEditSendForm = ({
             toast.message = "URL copied to clipboard";
           },
         };
-      }
+      } */
 
       toast.title = mode === "edit" ? "Send updated" : "Send created";
       toast.style = Toast.Style.Success;
@@ -133,16 +134,18 @@ export const CreateEditSendForm = ({
           <Action.SubmitForm
             title={mode === "edit" ? "Save Send" : "Create Send"}
             icon={{ source: "send.svg" }}
-            onSubmit={handleSubmit}
+            onSubmit={async (event) => {
+              // @ts-expect-error
+              await handleSubmit(event);
+            }}
           />
-          <DebuggingBugReportingActionSection />
         </ActionPanel>
       }
     >
       <Form.TextField
         {...itemProps.name}
         title="Name"
-        placeholder="Enter a name"
+        // placeholder="Enter a name"
         info="A friendly name to describe this send."
       />
       {mode === "create" && (
@@ -157,7 +160,7 @@ export const CreateEditSendForm = ({
           <Form.TextArea
             {...itemProps.text}
             title="Text"
-            placeholder="Enter the text you want to send"
+            // placeholder="Enter the text you want to send"
             info="The text you want to send"
           />
           <Form.Checkbox {...itemProps.hidden} label="Hide this Send's text by default" />
@@ -219,19 +222,19 @@ export const CreateEditSendForm = ({
       <Form.TextField
         {...itemProps.maxAccessCount}
         title="Maximum Access Count"
-        placeholder="Enter a maximum number of accesses"
+        // placeholder="Enter a maximum number of accesses"
         info="If set, user will no longer be able to access this Send once the maximum access count is reached."
       />
       <Form.PasswordField
         {...itemProps.accessPassword}
         title="Password"
-        placeholder="Enter a password"
+        // placeholder="Enter a password"
         info="Optionally require a password for users to access this Send."
       />
       <Form.TextArea
         {...itemProps.notes}
         title="Notes"
-        placeholder="Enter notes"
+        // placeholder="Enter notes"
         info="Private notes about this Send."
       />
       <Form.Checkbox {...itemProps.hideEmail} label="Hide my email address from recipients" />

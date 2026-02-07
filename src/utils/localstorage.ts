@@ -1,4 +1,4 @@
-import { LocalStorage } from "@raycast/api";
+import { LocalStorage } from "@vicinae/api";
 import { usePromise } from "@raycast/utils";
 
 type LocalStorageItemActions = {

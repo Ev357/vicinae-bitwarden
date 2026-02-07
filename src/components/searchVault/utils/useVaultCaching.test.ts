@@ -1,4 +1,4 @@
-import { getPreferenceValues as _getPreferenceValues } from "@raycast/api";
+import { getPreferenceValues as _getPreferenceValues } from "@vicinae/api";
 import {
   prepareItemsForCache as _prepareItemsForCache,
   prepareFoldersForCache as _prepareFoldersForCache,

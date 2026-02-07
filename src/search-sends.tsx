@@ -9,11 +9,10 @@ import {
   getPreferenceValues,
   showToast,
   useNavigation,
-} from "@raycast/api";
+} from "@vicinae/api";
 import { useCachedState, usePromise } from "@raycast/utils";
 import { useRef } from "react";
 import { Bitwarden } from "~/api/bitwarden";
-import { DebuggingBugReportingActionSection } from "~/components/actions";
 import { ListLoadingView } from "~/components/ListLoadingView";
 import RootErrorBoundary from "~/components/RootErrorBoundary";
 import { CACHE_KEYS } from "~/constants/general";
@@ -26,7 +25,6 @@ import { getFormattedDate } from "~/utils/dates";
 import { captureException } from "~/utils/development";
 import useFrontmostApplicationName from "~/utils/hooks/useFrontmostApplicationName";
 import { useInterval } from "~/utils/hooks/useInterval";
-import { platform } from "./utils/platform";
 
 const searchBarPlaceholder = "Search sends";
 const LoadingFallback = () => <List searchBarPlaceholder={searchBarPlaceholder} isLoading />;
@@ -44,7 +42,7 @@ const SearchSendsCommand = () => (
 );
 
 const getItemIcon = (send: Send): NonNullable<List.Item.Props["icon"]> => {
-  if (send.type === SendType.File) return { source: Icon.Document, tintColor: Color.Blue };
+  if (send.type === SendType.File) return { source: Icon.BlankDocument, tintColor: Color.Blue };
   return { source: Icon.Text, tintColor: Color.SecondaryText };
 };
 
@@ -55,7 +53,7 @@ const getDateAccessoryDetails = (dateString: string) => {
   return {
     date,
     isPastDate,
-    color: isPastDate ? Color.Red : undefined,
+    color: isPastDate ? Color.Red : Color.PrimaryText,
     textDate: getFormattedDate(date, { abbreviate: true, second: undefined }),
     tooltipDate: getFormattedDate(date),
   };
@@ -76,8 +74,8 @@ const getItemAccessories = (send: Send): List.Item.Props["accessories"] => {
     const wasMaxAccessReached = maxAccessCount && accessCount >= maxAccessCount;
 
     accessories.push({
-      tag: { value: `${accessCount}`, color: wasMaxAccessReached ? Color.Red : undefined },
-      icon: { source: Icon.Person, tintColor: wasMaxAccessReached ? Color.Red : undefined },
+      tag: { value: `${accessCount}`, color: wasMaxAccessReached ? Color.Red : Color.PrimaryText },
+      icon: { source: Icon.Person, tintColor: wasMaxAccessReached ? Color.Red : Color.PrimaryText },
       tooltip: maxAccessCount
         ? `Max access count reached: ${accessCount}/${maxAccessCount}`
         : `Access Count: ${accessCount}`,
@@ -186,10 +184,8 @@ const useListSends = (bitwarden: Bitwarden) => {
 
 const syncAction = {
   title: "Sync Vault",
-  shortcut: (platform === "windows"
-    ? { key: "r", modifiers: ["alt"] }
-    : { key: "r", modifiers: ["opt"] }) satisfies Keyboard.Shortcut,
-  shortcutLabel: platform === "windows" ? "Alt+R" : "⌥+R",
+  shortcut: { key: "r", modifiers: ["cmd"] } satisfies Keyboard.Shortcut,
+  shortcutLabel: "Alt+R",
 };
 
 function SearchSendsCommandContent() {
@@ -339,7 +335,7 @@ function SearchSendsCommandContent() {
         title="Create New Send"
         target={<CreateSendCommand onSuccess={onCreateSuccess} />}
         icon={Icon.NewDocument}
-        shortcut={{ macOS: { key: "n", modifiers: ["opt"] }, Windows: { key: "n", modifiers: ["alt"] } }}
+        shortcut={{ key: "n", modifiers: ["cmd"] }}
       />
       <Action
         title={syncAction.title}
@@ -356,12 +352,7 @@ function SearchSendsCommandContent() {
         <List.EmptyView
           title="There are no items to list."
           icon="sends-empty-list.svg"
-          actions={
-            <ActionPanel>
-              {sendManagementActionSection}
-              <DebuggingBugReportingActionSection />
-            </ActionPanel>
-          }
+          actions={<ActionPanel>{sendManagementActionSection}</ActionPanel>}
           description={`Try syncing your vault with the ${syncAction.title} (${syncAction.shortcutLabel}) action.`}
         />
       </List>
@@ -371,7 +362,7 @@ function SearchSendsCommandContent() {
   return (
     <List
       searchBarPlaceholder={searchBarPlaceholder}
-      selectedItemId={selectedItemIdRef.current}
+      // selectedItemId={selectedItemIdRef.current}
       searchBarAccessory={searchBarAccessory}
     >
       {sends.map((send) => (
@@ -390,24 +381,23 @@ function SearchSendsCommandContent() {
                   title="Remove Password"
                   onAction={() => onRemovePassword(send.id)}
                   icon={Icon.LockUnlocked}
-                  shortcut={{ macOS: { key: "p", modifiers: ["opt"] }, Windows: { key: "p", modifiers: ["alt"] } }}
+                  shortcut={{ key: "p", modifiers: ["cmd"] }}
                 />
               )}
               <Action.Push
                 title="Edit Send"
                 target={<CreateSendCommand send={send} onSuccess={onEditSuccess} />}
                 icon={Icon.Pencil}
-                shortcut={{ macOS: { key: "e", modifiers: ["opt"] }, Windows: { key: "e", modifiers: ["alt"] } }}
+                shortcut={{ key: "e", modifiers: ["cmd"] }}
               />
               <Action
                 title="Delete Send"
                 style={Action.Style.Destructive}
                 onAction={() => onDelete(send.id)}
                 icon={Icon.Trash}
-                shortcut={{ macOS: { key: "d", modifiers: ["opt"] }, Windows: { key: "d", modifiers: ["alt"] } }}
+                shortcut={{ key: "d", modifiers: ["cmd"] }}
               />
               {sendManagementActionSection}
-              <DebuggingBugReportingActionSection />
             </ActionPanel>
           }
         />

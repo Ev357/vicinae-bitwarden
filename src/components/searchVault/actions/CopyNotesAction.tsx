@@ -1,4 +1,4 @@
-import { Action, Clipboard, Icon, Toast, showToast } from "@raycast/api";
+import { Action, Clipboard, Icon, Toast, showToast } from "@vicinae/api";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
 import useGetUpdatedVaultItem from "~/components/searchVault/utils/useGetUpdatedVaultItem";
 import { showCopySuccessMessage } from "~/utils/clipboard";
@@ -15,7 +15,7 @@ function CopyNotesAction() {
     try {
       const username = await getUpdatedVaultItem(selectedItem, (item) => item.notes, "Getting notes...");
       if (username) {
-        await Clipboard.copy(username, { transient: getTransientCopyPreference("other") });
+        await Clipboard.copy(username, { concealed: getTransientCopyPreference("other") });
         await showCopySuccessMessage("Copied notes to clipboard");
       }
     } catch (error) {
@@ -24,7 +24,7 @@ function CopyNotesAction() {
     }
   };
 
-  return <Action title="Copy Notes" icon={Icon.Clipboard} onAction={handleCopyNotes} />;
+  return <Action title="Copy Notes" icon={Icon.CopyClipboard} onAction={handleCopyNotes} />;
 }
 
 export default CopyNotesAction;

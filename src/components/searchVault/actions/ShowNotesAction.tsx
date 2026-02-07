@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Clipboard, Detail, Icon, Toast, showToast, useNavigation } from "@raycast/api";
+import { Action, ActionPanel, Clipboard, Detail, Icon, Toast, showToast, useNavigation } from "@vicinae/api";
 import ActionWithReprompt from "~/components/actions/ActionWithReprompt";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
 import useGetUpdatedVaultItem from "~/components/searchVault/utils/useGetUpdatedVaultItem";
@@ -29,14 +29,14 @@ function ShowNotesAction() {
       icon={Icon.Eye}
       onAction={showNotes}
       repromptDescription={`Showing the notes of <${selectedItem.name}>`}
-      shortcut={{ macOS: { key: "n", modifiers: ["opt"] }, Windows: { key: "n", modifiers: ["alt"] } }}
+      shortcut={{ key: "n", modifiers: ["cmd"] }}
     />
   );
 }
 
 function DetailsScreen({ itemName, notes }: { itemName: string; notes: string }) {
   const handleCopy = async () => {
-    await Clipboard.copy(notes, { transient: getTransientCopyPreference("other") });
+    await Clipboard.copy(notes, { concealed: getTransientCopyPreference("other") });
     await showCopySuccessMessage("Copied notes to clipboard");
   };
 
@@ -45,7 +45,7 @@ function DetailsScreen({ itemName, notes }: { itemName: string; notes: string })
       markdown={getNotesDetailsMarkdown(itemName, notes)}
       actions={
         <ActionPanel>
-          <Action title="Copy Notes" onAction={handleCopy} icon={Icon.Clipboard} />
+          <Action title="Copy Notes" onAction={handleCopy} icon={Icon.CopyClipboard} />
         </ActionPanel>
       }
     />

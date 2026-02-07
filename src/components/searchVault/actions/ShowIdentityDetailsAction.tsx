@@ -1,4 +1,4 @@
-import { Icon, Toast, showToast, useNavigation } from "@raycast/api";
+import { Icon, Toast, showToast, useNavigation } from "@vicinae/api";
 import ActionWithReprompt from "~/components/actions/ActionWithReprompt";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
 import useGetUpdatedVaultItem from "~/components/searchVault/utils/useGetUpdatedVaultItem";

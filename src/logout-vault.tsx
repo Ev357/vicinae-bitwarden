@@ -1,4 +1,4 @@
-import { Alert, Icon, confirmAlert, showToast, Toast } from "@raycast/api";
+import { Alert, Icon, confirmAlert, showToast, Toast } from "@vicinae/api";
 import { Bitwarden } from "~/api/bitwarden";
 import { SessionStorage } from "~/context/session/utils";
 import { Cache } from "~/utils/cache";

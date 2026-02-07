@@ -1,8 +1,6 @@
-import { ActionPanel, Action, Detail, getPreferenceValues, environment } from "@raycast/api";
-import { BugReportCollectDataAction, BugReportOpenAction } from "~/components/actions";
+import { ActionPanel, Action, Detail, getPreferenceValues, environment } from "@vicinae/api";
 import { BUG_REPORT_URL } from "~/components/actions/BugReportOpenAction";
 import { EnsureCliBinError, InstalledCLINotFoundError, getErrorString } from "~/utils/errors";
-import { platform } from "~/utils/platform";
 
 const LINE_BREAK = "\n\n";
 const CLI_INSTALLATION_HELP_URL = "https://bitwarden.com/help/cli/#download-and-install";
@@ -55,9 +53,7 @@ const TroubleshootingGuide = ({ error }: TroubleshootingGuideProps) => {
     messages.push(
       ">## Technical details 🤓",
       isArchError &&
-        `⚠️ We suspect that your Bitwarden CLI was installed using a version of NodeJS that's incompatible with your system architecture (e.g. x64 NodeJS on a M1/Apple Silicon Mac). Please make sure your have the correct versions of your software installed (e.g., ${
-          platform === "macos" ? "Homebrew, " : ""
-        }NodeJS, and Bitwarden CLI).`,
+        `⚠️ We suspect that your Bitwarden CLI was installed using a version of NodeJS that's incompatible with your system architecture (e.g. x64 NodeJS on a M1/Apple Silicon Mac). Please make sure your have the correct versions of your software installed.`,
       getCodeBlock(errorString)
     );
   }
@@ -67,10 +63,6 @@ const TroubleshootingGuide = ({ error }: TroubleshootingGuideProps) => {
       markdown={messages.filter(Boolean).join(LINE_BREAK)}
       actions={
         <ActionPanel>
-          <ActionPanel.Section title="Bug Report">
-            <BugReportOpenAction />
-            <BugReportCollectDataAction />
-          </ActionPanel.Section>
           {needsToInstallCli && (
             <Action.OpenInBrowser title="Open Installation Guide" url={CLI_INSTALLATION_HELP_URL} />
           )}

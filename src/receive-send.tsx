@@ -1,19 +1,8 @@
-import {
-  Action,
-  ActionPanel,
-  Form,
-  Icon,
-  LaunchProps,
-  Toast,
-  closeMainWindow,
-  showInFinder,
-  showToast,
-} from "@raycast/api";
+import { Action, ActionPanel, Form, Icon, LaunchProps, Toast, closeMainWindow, showToast } from "@vicinae/api";
 import { FormValidation, useForm } from "@raycast/utils";
 import { ExecaError } from "execa";
 import { join } from "path";
 import { useReducer, useRef } from "react";
-import { DebuggingBugReportingActionSection } from "~/components/actions";
 import RootErrorBoundary from "~/components/RootErrorBoundary";
 import { BitwardenProvider, useBitwarden } from "~/context/bitwarden";
 import { SessionProvider } from "~/context/session";
@@ -167,7 +156,6 @@ function ReceiveSendCommandContent({ arguments: args }: LaunchProps<{ arguments:
 
       toast.title = "File downloaded";
       toast.style = Toast.Style.Success;
-      await showInFinder(savePath);
       await closeMainWindow();
     } catch (error) {
       toast.style = Toast.Style.Failure;
@@ -204,13 +192,15 @@ function ReceiveSendCommandContent({ arguments: args }: LaunchProps<{ arguments:
             <Action.SubmitForm
               title={state.status === "pendingFile" ? "Download File" : "Receive Send"}
               icon={{ source: Icon.Download }}
-              onSubmit={handleSubmit}
+              onSubmit={async (event) => {
+                // @ts-expect-error
+                await handleSubmit(event);
+              }}
             />
           )}
           {(values.password || values.url) && (
             <Action title="Reset Fields" icon={{ source: Icon.Trash }} onAction={resetFields} />
           )}
-          <DebuggingBugReportingActionSection />
         </ActionPanel>
       }
     >

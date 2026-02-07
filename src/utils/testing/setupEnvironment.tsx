@@ -1,5 +1,5 @@
 jest.mock(
-  "@raycast/api",
+  "@vicinae/api",
   () => ({
     Alert: {
       ActionStyle: {

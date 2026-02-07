@@ -1,4 +1,4 @@
-import { Clipboard, Icon, showToast, Toast } from "@raycast/api";
+import { Clipboard, Icon, showToast, Toast } from "@vicinae/api";
 import ActionWithReprompt from "~/components/actions/ActionWithReprompt";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
 import useGetUpdatedVaultItem from "~/components/searchVault/utils/useGetUpdatedVaultItem";
@@ -20,7 +20,7 @@ function CopyKeyFingerprintAction() {
         "Getting key fingerprint..."
       );
       if (keyFingerprint) {
-        await Clipboard.copy(keyFingerprint, { transient: getTransientCopyPreference("other") });
+        await Clipboard.copy(keyFingerprint, { concealed: getTransientCopyPreference("other") });
         await showCopySuccessMessage("Copied key fingerprint to clipboard");
       }
     } catch (error) {

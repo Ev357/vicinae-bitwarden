@@ -1,4 +1,4 @@
-import { getPreferenceValues, showToast, Toast } from "@raycast/api";
+import { getPreferenceValues, showToast, Toast } from "@vicinae/api";
 import { createContext, ReactNode, useContext, useMemo, useReducer } from "react";
 import { useVaultItemPublisher } from "~/components/searchVault/context/vaultListeners";
 import { useBitwarden } from "~/context/bitwarden";

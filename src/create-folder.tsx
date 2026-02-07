@@ -1,9 +1,8 @@
-import { Form, Action, ActionPanel, showToast, Toast, Icon } from "@raycast/api";
+import { Form, Action, ActionPanel, showToast, Toast, Icon } from "@vicinae/api";
 import { BitwardenProvider, useBitwarden } from "~/context/bitwarden";
 import RootErrorBoundary from "~/components/RootErrorBoundary";
 import { SessionProvider } from "~/context/session";
 import { FormValidation, useForm } from "@raycast/utils";
-import { DebuggingBugReportingActionSection } from "~/components/actions";
 
 const CreateFolderCommand = () => (
   <RootErrorBoundary>
@@ -46,12 +45,18 @@ function CreateFolderComponent() {
     <Form
       actions={
         <ActionPanel>
-          <Action.SubmitForm title="Create Folder" onSubmit={handleSubmit} icon={Icon.NewFolder} />
-          <DebuggingBugReportingActionSection />
+          <Action.SubmitForm
+            title="Create Folder"
+            onSubmit={async (event) => {
+              // @ts-expect-error
+              await handleSubmit(event);
+            }}
+            icon={Icon.NewFolder}
+          />
         </ActionPanel>
       }
     >
-      <Form.TextField title="Folder Name" placeholder="eg: Personal, Work" autoFocus {...itemProps.name} />
+      <Form.TextField title="Folder Name" info="eg: Personal, Work" autoFocus {...itemProps.name} />
     </Form>
   );
 }

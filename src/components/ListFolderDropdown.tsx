@@ -1,4 +1,4 @@
-import { List, Icon } from "@raycast/api";
+import { List, Icon } from "@vicinae/api";
 import { FOLDER_OPTIONS } from "~/constants/general";
 import { useVaultContext } from "~/context/vault";
 

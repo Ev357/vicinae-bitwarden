@@ -1,6 +1,6 @@
-import { environment, getPreferenceValues, LocalStorage, open, showToast, Toast } from "@raycast/api";
+import { environment, getPreferenceValues, LocalStorage, showToast, Toast } from "@vicinae/api";
 import { execa, ExecaChildProcess, ExecaError, ExecaReturnValue } from "execa";
-import { existsSync, unlinkSync, writeFileSync, accessSync, constants, chmodSync } from "fs";
+import { existsSync, accessSync, constants, chmodSync } from "fs";
 import { LOCAL_STORAGE_KEY, DEFAULT_SERVER_URL, CACHE_KEYS } from "~/constants/general";
 import { VaultState, VaultStatus } from "~/types/general";
 import { PasswordGeneratorOptions } from "~/types/passwords";
@@ -8,25 +8,19 @@ import { Folder, Item, ItemType, Login } from "~/types/vault";
 import { getPasswordGeneratingArgs } from "~/utils/passwords";
 import { getServerUrlPreference } from "~/utils/preferences";
 import {
-  EnsureCliBinError,
   InstalledCLINotFoundError,
   ManuallyThrownError,
   NotLoggedInError,
   PremiumFeatureError,
   SendInvalidPasswordError,
   SendNeedsPasswordError,
-  tryExec,
   VaultIsLockedError,
 } from "~/utils/errors";
-import { join, dirname } from "path";
-import { chmod, rename, rm } from "fs/promises";
-import { decompressFile, removeFilesThatStartWith, unlinkAllSync, waitForFileAvailable } from "~/utils/fs";
-import { download } from "~/utils/network";
+import { dirname } from "path";
 import { captureException } from "~/utils/development";
 import { ReceivedSend, Send, SendCreatePayload, SendType } from "~/types/send";
 import { prepareSendPayload } from "~/api/bitwarden.helpers";
 import { Cache } from "~/utils/cache";
-import { platform } from "~/utils/platform";
 
 type Env = {
   BITWARDENCLI_APPDATA_DIR: string;
@@ -85,57 +79,6 @@ type CreateLoginItemOptions = {
 
 const { supportPath } = environment;
 
-const Δ = "4"; // changing this forces a new bin download for people that had a failed one
-const BinDownloadLogger = (() => {
-  /* The idea of this logger is to write a log file when the bin download fails, so that we can let the extension crash,
-   but fallback to the local cli path in the next launch. This allows the error to be reported in the issues dashboard. It uses files to keep it synchronous, as it's needed in the constructor.
-   Although, the plan is to discontinue this method, if there's a better way of logging errors in the issues dashboard
-   or there are no crashes reported with the bin download after some time. */
-  const filePath = join(supportPath, `bw-bin-download-error-${Δ}.log`);
-  return {
-    logError: (error: any) => tryExec(() => writeFileSync(filePath, error?.message ?? "Unexpected error")),
-    clearError: () => tryExec(() => unlinkSync(filePath)),
-    hasError: () => tryExec(() => existsSync(filePath), false),
-  };
-})();
-
-export const cliInfo = {
-  version: "2025.2.0",
-  get sha256() {
-    if (platform === "windows") return "33a131017ac9c99d721e430a86e929383314d3f91c9f2fbf413d872565654c18";
-    return "fade51012a46011c016a2e5aee2f2e534c1ed078e49d1178a69e2889d2812a96";
-  },
-  downloadPage: "https://github.com/bitwarden/clients/releases",
-  path: {
-    get downloadedBin() {
-      return join(supportPath, cliInfo.binFilenameVersioned);
-    },
-    get installedBin() {
-      // We assume that it was installed using Chocolatey, if not, it's hard to make a good guess.
-      if (platform === "windows") return "C:\\ProgramData\\chocolatey\\bin\\bw.exe";
-      return process.arch === "arm64" ? "/opt/homebrew/bin/bw" : "/usr/local/bin/bw";
-    },
-    get bin() {
-      return !BinDownloadLogger.hasError() ? this.downloadedBin : this.installedBin;
-    },
-  },
-  get binFilename() {
-    return platform === "windows" ? "bw.exe" : "bw";
-  },
-  get binFilenameVersioned() {
-    const name = `bw-${this.version}`;
-    return platform === "windows" ? `${name}.exe` : `${name}`;
-  },
-  get downloadUrl() {
-    let archSuffix = "";
-    if (platform === "macos") {
-      archSuffix = process.arch === "arm64" ? "-arm64" : "";
-    }
-
-    return `${this.downloadPage}/download/cli-v${this.version}/bw-${platform}${archSuffix}-${this.version}.zip`;
-  },
-} as const;
-
 export class Bitwarden {
   private env: Env;
   private initPromise: Promise<void>;
@@ -151,7 +94,7 @@ export class Bitwarden {
     const serverUrl = getServerUrlPreference();
 
     this.toastInstance = toastInstance;
-    this.cliPath = cliPathPreference || cliInfo.path.bin;
+    this.cliPath = cliPathPreference || "/usr/local/bin/bw"; // TODO: fix later
     this.env = {
       BITWARDENCLI_APPDATA_DIR: supportPath,
       BW_CLIENTSECRET: clientSecret.trim(),
@@ -161,72 +104,17 @@ export class Bitwarden {
     };
 
     this.initPromise = (async (): Promise<void> => {
-      await this.ensureCliBinary();
+      this.ensureCliBinary();
       void this.retrieveAndCacheCliVersion();
       await this.checkServerUrl(serverUrl);
     })();
   }
 
-  private async ensureCliBinary(): Promise<void> {
+  private ensureCliBinary() {
+    // TODO: fix later
     if (this.checkCliBinIsReady(this.cliPath)) return;
-    if (this.cliPath === this.preferences.cliPath || this.cliPath === cliInfo.path.installedBin) {
+    if (this.cliPath === this.preferences.cliPath) {
       throw new InstalledCLINotFoundError(`Bitwarden CLI not found at ${this.cliPath}`);
-    }
-    if (BinDownloadLogger.hasError()) BinDownloadLogger.clearError();
-
-    // remove old binaries to check if it's an update and because they are 100MB+
-    const hadOldBinaries = await removeFilesThatStartWith("bw-", supportPath);
-    const toast = await this.showToast({
-      title: `${hadOldBinaries ? "Updating" : "Initializing"} Bitwarden CLI`,
-      style: Toast.Style.Animated,
-      primaryAction: { title: "Open Download Page", onAction: () => open(cliInfo.downloadPage) },
-    });
-    const tmpFileName = "bw.zip";
-    const zipPath = join(supportPath, tmpFileName);
-
-    try {
-      try {
-        toast.message = "Downloading...";
-        await download(cliInfo.downloadUrl, zipPath, {
-          onProgress: (percent) => (toast.message = `Downloading ${percent}%`),
-          sha256: cliInfo.sha256,
-        });
-      } catch (downloadError) {
-        toast.title = "Failed to download Bitwarden CLI";
-        throw downloadError;
-      }
-
-      try {
-        toast.message = "Extracting...";
-        await decompressFile(zipPath, supportPath);
-        const decompressedBinPath = join(supportPath, cliInfo.binFilename);
-
-        // For some reason this rename started throwing an error after succeeding, so for now we're just
-        // catching it and checking if the file exists ¯\_(ツ)_/¯
-        await rename(decompressedBinPath, this.cliPath).catch(() => null);
-        await waitForFileAvailable(this.cliPath);
-
-        await chmod(this.cliPath, "755");
-        await rm(zipPath, { force: true });
-
-        Cache.set(CACHE_KEYS.CLI_VERSION, cliInfo.version);
-        this.wasCliUpdated = true;
-      } catch (extractError) {
-        toast.title = "Failed to extract Bitwarden CLI";
-        throw extractError;
-      }
-      await toast.hide();
-    } catch (error) {
-      toast.message = error instanceof EnsureCliBinError ? error.message : "Please try again";
-      toast.style = Toast.Style.Failure;
-
-      unlinkAllSync(zipPath, this.cliPath);
-
-      if (!environment.isDevelopment) BinDownloadLogger.logError(error);
-      if (error instanceof Error) throw new EnsureCliBinError(error.message, error.stack);
-      throw error;
-    } finally {
-      await toast.restore();
     }
   }
 
@@ -235,7 +123,7 @@ export class Bitwarden {
       const { error, result } = await this.getVersion();
       if (!error) Cache.set(CACHE_KEYS.CLI_VERSION, result);
     } catch (error) {
-      captureException("Failed to retrieve and cache cli version", error, { captureToRaycast: true });
+      captureException("Failed to retrieve and cache cli version", error);
     }
   }
 
@@ -702,7 +590,7 @@ export class Bitwarden {
 
   // utils below
 
-  async saveLastVaultStatus(callName: string, status: VaultStatus): Promise<void> {
+  async saveLastVaultStatus(_callName: string, status: VaultStatus): Promise<void> {
     await LocalStorage.setItem(LOCAL_STORAGE_KEY.VAULT_LAST_STATUS, status);
   }
 
@@ -777,15 +665,11 @@ export class Bitwarden {
       const previousStateToastOpts: Toast.Options = {
         message: this.toastInstance.message,
         title: this.toastInstance.title,
-        primaryAction: this.toastInstance.primaryAction,
-        secondaryAction: this.toastInstance.secondaryAction,
       };
 
       if (toastOpts.style) this.toastInstance.style = toastOpts.style;
       this.toastInstance.message = toastOpts.message;
       this.toastInstance.title = toastOpts.title;
-      this.toastInstance.primaryAction = toastOpts.primaryAction;
-      this.toastInstance.secondaryAction = toastOpts.secondaryAction;
       await this.toastInstance.show();
 
       return Object.assign(this.toastInstance, {

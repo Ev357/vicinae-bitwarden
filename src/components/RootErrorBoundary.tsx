@@ -1,4 +1,4 @@
-import { environment, showToast, Toast } from "@raycast/api";
+import { environment, showToast, Toast } from "@vicinae/api";
 import { Component, ErrorInfo, ReactNode } from "react";
 import TroubleshootingGuide from "~/components/TroubleshootingGuide";
 import { ManuallyThrownError } from "~/utils/errors";

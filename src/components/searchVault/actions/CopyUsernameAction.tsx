@@ -1,4 +1,4 @@
-import { Action, Clipboard, Icon, Toast, showToast } from "@raycast/api";
+import { Action, Clipboard, Icon, Toast, showToast } from "@vicinae/api";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
 import useGetUpdatedVaultItem from "~/components/searchVault/utils/useGetUpdatedVaultItem";
 import { showCopySuccessMessage } from "~/utils/clipboard";
@@ -15,7 +15,7 @@ function CopyUsernameAction() {
     try {
       const username = await getUpdatedVaultItem(selectedItem, (item) => item.login?.username, "Getting username...");
       if (username) {
-        await Clipboard.copy(username, { transient: getTransientCopyPreference("other") });
+        await Clipboard.copy(username, { concealed: getTransientCopyPreference("other") });
         await showCopySuccessMessage("Copied username to clipboard");
       }
     } catch (error) {
@@ -29,7 +29,7 @@ function CopyUsernameAction() {
       title="Copy Username"
       icon={Icon.Person}
       onAction={handleCopyUsername}
-      shortcut={{ macOS: { key: "u", modifiers: ["opt"] }, Windows: { key: "u", modifiers: ["alt"] } }}
+      shortcut={{ key: "u", modifiers: ["cmd"] }}
     />
   );
 }

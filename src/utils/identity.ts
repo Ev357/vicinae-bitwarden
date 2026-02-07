@@ -1,12 +1,11 @@
 import { SHORTCUT_KEY_SEQUENCE } from "~/constants/general";
 import { IDENTITY_KEY_LABEL } from "~/constants/labels";
 import { Identity } from "~/types/vault";
-import { platform } from "./platform";
 
 export function getIdentityDetailsMarkdown(itemName: string, identity: Identity) {
   return `# 🪪 ${itemName}
 &nbsp;
-| ${platform === "macos" ? "⌥" : "Alt"}\t**Field** | **Value** |
+| Alt\t**Field** | **Value** |
 | --- | --- |
 ${Object.entries(identity)
   .map(([key, value], index) => {

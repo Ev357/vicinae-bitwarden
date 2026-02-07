@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Color, Icon, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Color, Icon, showToast, Toast } from "@vicinae/api";
 import { VAULT_LOCK_MESSAGES } from "~/constants/general";
 import { useBitwarden } from "~/context/bitwarden";
 import { useVaultContext } from "~/context/vault";
@@ -28,7 +28,7 @@ export function VaultActionsSection() {
     <ActionPanel.Section title="Vault Actions">
       <Action
         title="Sync Vault"
-        shortcut={{ macOS: { key: "r", modifiers: ["opt"] }, Windows: { key: "r", modifiers: ["alt"] } }}
+        shortcut={{ key: "r", modifiers: ["cmd"] }}
         icon={Icon.ArrowClockwise}
         onAction={vault.syncItems}
       />
@@ -36,8 +36,8 @@ export function VaultActionsSection() {
         icon={{ source: "sf_symbols_lock.svg", tintColor: Color.PrimaryText }} // Does not immediately follow theme
         title="Lock Vault"
         shortcut={{
-          macOS: { key: "l", modifiers: ["opt", "shift"] },
-          Windows: { key: "l", modifiers: ["alt", "shift"] },
+          key: "l",
+          modifiers: ["cmd", "shift"],
         }}
         onAction={handleLockVault}
       />

@@ -1,4 +1,4 @@
-import { Clipboard, Icon, Toast, showToast } from "@raycast/api";
+import { Clipboard, Icon, Toast, showToast } from "@vicinae/api";
 import ActionWithReprompt from "~/components/actions/ActionWithReprompt";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
 import useGetUpdatedVaultItem from "~/components/searchVault/utils/useGetUpdatedVaultItem";
@@ -25,12 +25,12 @@ function PasteUsernameAction() {
   return (
     <ActionWithReprompt
       title={currentApplication ? `Paste Username into ${currentApplication}` : "Paste Username"}
-      icon={Icon.Window}
+      icon={Icon.AppWindow}
       onAction={pasteUsername}
       repromptDescription={`Pasting the username of <${selectedItem.name}>`}
       shortcut={{
-        macOS: { key: "u", modifiers: ["cmd", "opt"] },
-        Windows: { key: "u", modifiers: ["ctrl", "alt"] },
+        key: "u",
+        modifiers: ["ctrl", "cmd"],
       }}
     />
   );

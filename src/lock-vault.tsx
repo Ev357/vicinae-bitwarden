@@ -1,4 +1,4 @@
-import { showToast, Toast } from "@raycast/api";
+import { showToast, Toast } from "@vicinae/api";
 import { Bitwarden } from "~/api/bitwarden";
 import { VAULT_LOCK_MESSAGES } from "~/constants/general";
 import { SessionStorage } from "~/context/session/utils";

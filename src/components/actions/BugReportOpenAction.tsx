@@ -1,4 +1,4 @@
-import { Action } from "@raycast/api";
+import { Action } from "@vicinae/api";
 
 export const BUG_REPORT_URL =
   "https://github.com/raycast/extensions/issues/new?assignees=&labels=extension%2Cbug&template=extension_bug_report.yml&title=%5BBitwarden%5D+...";

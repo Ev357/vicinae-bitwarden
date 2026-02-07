@@ -1,4 +1,4 @@
-import { Clipboard, getPreferenceValues, showHUD, showToast, Toast } from "@raycast/api";
+import { Clipboard, getPreferenceValues, showHUD, showToast, Toast } from "@vicinae/api";
 import { Bitwarden } from "~/api/bitwarden";
 import { showCopySuccessMessage } from "~/utils/clipboard";
 import { captureException } from "~/utils/development";
@@ -12,14 +12,14 @@ const actions: Record<
   (password: string) => Promise<void>
 > = {
   copy: async (password) => {
-    await Clipboard.copy(password, { transient: getTransientCopyPreference("password") });
+    await Clipboard.copy(password, { concealed: getTransientCopyPreference("password") });
     await showCopySuccessMessage("Copied password to clipboard");
   },
   paste: async (password) => {
     await Clipboard.paste(password);
   },
   copyAndPaste: async (password) => {
-    await Clipboard.copy(password, { transient: getTransientCopyPreference("password") });
+    await Clipboard.copy(password, { concealed: getTransientCopyPreference("password") });
     await Clipboard.paste(password);
     await showHUD("Copied password to clipboard");
   },

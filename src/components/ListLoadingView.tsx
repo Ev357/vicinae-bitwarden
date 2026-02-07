@@ -1,9 +1,10 @@
-import { Icon, List } from "@raycast/api";
+import { Icon, List } from "@vicinae/api";
+import type { EmptyViewProps } from "@vicinae/api/dist/api/components/empty-view";
 import { useEffect, useState } from "react";
 
 const ProgressIcons = [Icon.CircleProgress25, Icon.CircleProgress50, Icon.CircleProgress75, Icon.CircleProgress100];
 
-export type ListLoadingViewProps = Omit<List.EmptyView.Props, "icon">;
+export type ListLoadingViewProps = Omit<EmptyViewProps, "icon">;
 
 export const ListLoadingView = (props: ListLoadingViewProps) => {
   const [progressIconIndex, setProgressIconIndex] = useState(0);

@@ -1,4 +1,4 @@
-import { LocalStorage } from "@raycast/api";
+import { LocalStorage } from "@vicinae/api";
 import { LOCAL_STORAGE_KEY } from "~/constants/general";
 import { exec as callbackExec, PromiseWithChild } from "child_process";
 import { promisify } from "util";

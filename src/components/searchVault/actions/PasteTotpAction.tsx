@@ -1,4 +1,4 @@
-import { Clipboard, Icon, showToast, Toast } from "@raycast/api";
+import { Clipboard, Icon, showToast, Toast } from "@vicinae/api";
 import ActionWithReprompt from "~/components/actions/ActionWithReprompt";
 import { useBitwarden } from "~/context/bitwarden";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
@@ -33,11 +33,11 @@ function PasteTotpAction() {
   return (
     <ActionWithReprompt
       title={currentApplicationName ? `Paste TOTP into ${currentApplicationName}` : "Paste TOTP"}
-      icon={Icon.Window}
+      icon={Icon.AppWindow}
       onAction={pasteTotp}
       shortcut={{
-        macOS: { key: "t", modifiers: ["opt", "shift"] },
-        Windows: { key: "t", modifiers: ["alt", "shift"] },
+        key: "t",
+        modifiers: ["cmd", "shift"],
       }}
       repromptDescription={`Pasting the TOTP of <${selectedItem.name}>`}
     />

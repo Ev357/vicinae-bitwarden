@@ -1,4 +1,4 @@
-import { List, Icon, ActionPanel } from "@raycast/api";
+import { List, Icon, ActionPanel } from "@vicinae/api";
 import RootErrorBoundary from "~/components/RootErrorBoundary";
 import VaultListenersProvider from "~/components/searchVault/context/vaultListeners";
 import VaultItem from "~/components/searchVault/Item";

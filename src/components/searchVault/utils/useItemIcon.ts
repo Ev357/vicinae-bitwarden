@@ -1,4 +1,4 @@
-import { Icon, getPreferenceValues } from "@raycast/api";
+import { Icon, getPreferenceValues } from "@vicinae/api";
 import { useMemo } from "react";
 import { ITEM_TYPE_TO_ICON_MAP } from "~/constants/general";
 import { Item, ItemType } from "~/types/vault";
@@ -30,6 +30,6 @@ export function useItemIcon(item: Item) {
   return useMemo(() => {
     const imageOrIcon = ITEM_TYPE_TO_IMAGE_OR_ICON_MAP[item.type]?.(item);
     if (imageOrIcon) return imageOrIcon;
-    return Icon.QuestionMark;
+    return Icon.QuestionMarkCircle;
   }, [item.type, item.card?.brand, item.login?.uris?.[0]?.uri]);
 }

@@ -1,4 +1,4 @@
-import { getPreferenceValues } from "@raycast/api";
+import { getPreferenceValues } from "@vicinae/api";
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from "crypto";
 import { useMemo } from "react";
 

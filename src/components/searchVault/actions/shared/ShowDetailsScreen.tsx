@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Clipboard, Detail, Icon } from "@raycast/api";
+import { Action, ActionPanel, Clipboard, Detail, Icon } from "@vicinae/api";
 import { getTransientCopyPreference } from "~/utils/preferences";
 import { capitalize } from "~/utils/strings";
 import { SHORTCUT_KEY_SEQUENCE } from "~/constants/general";
@@ -22,7 +22,7 @@ function ShowDetailsScreen<TDetails extends Constraint>(props: ShowDetailsScreen
   const capitalizedLabel = capitalize(label, true);
 
   const handleCopyField = (value: string) => async () => {
-    await Clipboard.copy(value, { transient: getTransientCopyPreference("other") });
+    await Clipboard.copy(value, { concealed: getTransientCopyPreference("other") });
     await showCopySuccessMessage("Copied details to clipboard");
   };
 
@@ -37,7 +37,7 @@ function ShowDetailsScreen<TDetails extends Constraint>(props: ShowDetailsScreen
   }, [details]);
 
   const copyDetails = async () => {
-    await Clipboard.copy(getCopyValue(sortedDetails), { transient: getTransientCopyPreference("other") });
+    await Clipboard.copy(getCopyValue(sortedDetails), { concealed: getTransientCopyPreference("other") });
     await showCopySuccessMessage(`Copied ${label} details to clipboard`);
   };
 
@@ -58,13 +58,13 @@ function ShowDetailsScreen<TDetails extends Constraint>(props: ShowDetailsScreen
                 <Action
                   key={`${index}-${fieldKey}`}
                   title={`Copy ${getTitle(fieldKey, titleMap)}`}
-                  icon={Icon.Clipboard}
+                  icon={Icon.CopyClipboard}
                   onAction={handleCopyField(content)}
                   shortcut={
                     shortcutKey
                       ? {
-                          macOS: { key: shortcutKey, modifiers: ["opt"] },
-                          Windows: { key: shortcutKey, modifiers: ["alt"] },
+                          key: shortcutKey,
+                          modifiers: ["cmd"],
                         }
                       : undefined
                   }

@@ -1,4 +1,4 @@
-import { Form, Detail } from "@raycast/api";
+import { Form, Detail } from "@vicinae/api";
 import useOneTimePasswordHistoryWarning from "~/utils/hooks/useOneTimePasswordHistoryWarning";
 import usePasswordGenerator, { UsePasswordGeneratorResult } from "~/utils/hooks/usePasswordGenerator";
 import { PasswordGeneratorOptions, PasswordType } from "~/types/passwords";
@@ -20,7 +20,7 @@ const GeneratePasswordCommand = () => (
 function GeneratePasswordForm() {
   const generator = usePasswordGenerator();
 
-  if (!generator.options) return <Detail isLoading />;
+  if (!generator.options) return <Detail markdown="Loading..." />;
   return <GeneratePasswordFormContent generator={generator} />;
 }
 
@@ -30,6 +30,7 @@ function GeneratePasswordFormContent({ generator }: { generator: UsePasswordGene
   const { options, password, isGenerating, regeneratePassword } = generator;
 
   const cliVersion = useCliVersion();
+  // @ts-expect-error
   const form = useOnChangeForm<PasswordGeneratorOptions>({
     onChange: regeneratePassword,
     initialValues: options,
@@ -64,23 +65,23 @@ function GeneratePasswordFormContent({ generator }: { generator: UsePasswordGene
       </Form.Dropdown>
       {values.passphrase ? (
         <>
-          <Form.TextField {...itemProps.words} title="Number of words" placeholder="3 - 20" />
-          <Form.TextField {...itemProps.separator} title="Word separator" placeholder="this-is-a-passphrase" />
+          <Form.TextField {...itemProps.words} title="Number of words" info="3 - 20" />
+          <Form.TextField {...itemProps.separator} title="Word separator" info="this-is-a-passphrase" />
           <Form.Checkbox {...itemProps.capitalize} title="Capitalize" label="This-Is-A-Passphrase" />
           <Form.Checkbox {...itemProps.includeNumber} title="Include number" label="This2-Is-A-Passphrase" />
         </>
       ) : (
         <>
-          <Form.TextField {...itemProps.length} title="Length of the password" placeholder="5 - 128" />
+          <Form.TextField {...itemProps.length} title="Length of the password" info="5 - 128" />
           <Form.Checkbox {...itemProps.uppercase} title="Uppercase characters" label="ABCDEFGHIJLMNOPQRSTUVWXYZ" />
           <Form.Checkbox {...itemProps.lowercase} title="Lowercase characters" label="abcdefghijklmnopqrstuvwxyz" />
           <Form.Checkbox {...itemProps.number} title="Numeric characters" label="0123456789" />
           {cliVersion >= 2023.9 && values.number && (
-            <Form.TextField {...itemProps.minNumber} title="Minimum numbers" placeholder="1" />
+            <Form.TextField {...itemProps.minNumber} title="Minimum numbers" info="1" />
           )}
           <Form.Checkbox {...itemProps.special} title="Special characters" label="!@#$%^&*()_+-=[]{}|;:,./<>?" />
           {cliVersion >= 2023.9 && values.special && (
-            <Form.TextField {...itemProps.minSpecial} title="Minimum special" placeholder="1" />
+            <Form.TextField {...itemProps.minSpecial} title="Minimum special" info="1" />
           )}
         </>
       )}

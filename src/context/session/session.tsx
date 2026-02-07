@@ -1,22 +1,16 @@
-import { LocalStorage, getPreferenceValues } from "@raycast/api";
+import { LocalStorage } from "@vicinae/api";
 import { createContext, PropsWithChildren, ReactNode, useContext, useMemo, useRef } from "react";
 import UnlockForm from "~/components/UnlockForm";
 import { VaultLoadingFallback } from "~/components/searchVault/VaultLoadingFallback";
 import { LOCAL_STORAGE_KEY, VAULT_LOCK_MESSAGES } from "~/constants/general";
-import { VAULT_TIMEOUT } from "~/constants/preferences";
 import { useBitwarden } from "~/context/bitwarden";
 import { useSessionReducer } from "~/context/session/reducer";
-import {
-  checkSystemLockedSinceLastAccess,
-  checkSystemSleptSinceLastAccess,
-  SessionStorage,
-} from "~/context/session/utils";
+import { SessionStorage } from "~/context/session/utils";
 import { SessionState } from "~/types/session";
 import { Cache } from "~/utils/cache";
 import { captureException } from "~/utils/development";
 import useOnceEffect from "~/utils/hooks/useOnceEffect";
 import { hashMasterPasswordForReprompting } from "~/utils/passwords";
-import { platform } from "~/utils/platform";
 
 export type Session = {
   active: boolean;
@@ -50,7 +44,7 @@ export function SessionProvider(props: SessionProviderProps) {
         .setActionListener("unlock", handleUnlock)
         .setActionListener("logout", handleLogout);
 
-      const [token, passwordHash, lastActivityTimeString, lastVaultStatus] = await SessionStorage.getSavedSession();
+      const [token, passwordHash, _, lastVaultStatus] = await SessionStorage.getSavedSession();
       if (!token || !passwordHash) throw new LockVaultError();
 
       dispatch({ type: "loadState", token, passwordHash });
@@ -60,25 +54,26 @@ export function SessionProvider(props: SessionProviderProps) {
       if (lastVaultStatus === "locked") throw new LockVaultError();
       if (lastVaultStatus === "unauthenticated") throw new LogoutVaultError();
 
-      if (lastActivityTimeString) {
-        const lastActivityTime = new Date(lastActivityTimeString);
-
-        const vaultTimeoutMs = +getPreferenceValues<Preferences>().repromptIgnoreDuration;
-        if (platform === "macos" && vaultTimeoutMs === VAULT_TIMEOUT.SYSTEM_LOCK) {
-          if (await checkSystemLockedSinceLastAccess(lastActivityTime)) {
-            throw new LockVaultError(VAULT_LOCK_MESSAGES.SYSTEM_LOCK);
-          }
-        } else if (platform === "macos" && vaultTimeoutMs === VAULT_TIMEOUT.SYSTEM_SLEEP) {
-          if (await checkSystemSleptSinceLastAccess(lastActivityTime)) {
-            throw new LockVaultError(VAULT_LOCK_MESSAGES.SYSTEM_SLEEP);
-          }
-        } else if (vaultTimeoutMs !== VAULT_TIMEOUT.NEVER) {
-          const timeElapseSinceLastActivity = Date.now() - lastActivityTime.getTime();
-          if (vaultTimeoutMs === VAULT_TIMEOUT.IMMEDIATELY || timeElapseSinceLastActivity >= vaultTimeoutMs) {
-            throw new LockVaultError(VAULT_LOCK_MESSAGES.TIMEOUT);
-          }
-        }
-      }
+      // TODO: fix later
+      // if (lastActivityTimeString) {
+      //   const lastActivityTime = new Date(lastActivityTimeString);
+      //
+      //   const vaultTimeoutMs = +getPreferenceValues<Preferences>().repromptIgnoreDuration;
+      //   if (platform === "macos" && vaultTimeoutMs === VAULT_TIMEOUT.SYSTEM_LOCK) {
+      //     if (await checkSystemLockedSinceLastAccess(lastActivityTime)) {
+      //       throw new LockVaultError(VAULT_LOCK_MESSAGES.SYSTEM_LOCK);
+      //     }
+      //   } else if (platform === "macos" && vaultTimeoutMs === VAULT_TIMEOUT.SYSTEM_SLEEP) {
+      //     if (await checkSystemSleptSinceLastAccess(lastActivityTime)) {
+      //       throw new LockVaultError(VAULT_LOCK_MESSAGES.SYSTEM_SLEEP);
+      //     }
+      //   } else if (vaultTimeoutMs !== VAULT_TIMEOUT.NEVER) {
+      //     const timeElapseSinceLastActivity = Date.now() - lastActivityTime.getTime();
+      //     if (vaultTimeoutMs === VAULT_TIMEOUT.IMMEDIATELY || timeElapseSinceLastActivity >= vaultTimeoutMs) {
+      //       throw new LockVaultError(VAULT_LOCK_MESSAGES.TIMEOUT);
+      //     }
+      //   }
+      // }
 
       dispatch({ type: "finishLoadingSavedState" });
     } catch (error) {

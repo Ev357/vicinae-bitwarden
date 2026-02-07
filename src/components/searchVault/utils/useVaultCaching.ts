@@ -1,4 +1,4 @@
-import { getPreferenceValues } from "@raycast/api";
+import { getPreferenceValues } from "@vicinae/api";
 import { prepareFoldersForCache, prepareItemsForCache } from "~/components/searchVault/utils/caching";
 import { CACHE_KEYS } from "~/constants/general";
 import { Folder, Item, Vault } from "~/types/vault";

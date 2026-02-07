@@ -1,4 +1,4 @@
-import { Toast, getPreferenceValues, popToRoot, showHUD, showToast } from "@raycast/api";
+import { Toast, getPreferenceValues, popToRoot, showHUD, showToast } from "@vicinae/api";
 import { capitalize } from "~/utils/strings";
 
 /** Displays a HUD or Toast and closes the window or not, depending on the preferences. */

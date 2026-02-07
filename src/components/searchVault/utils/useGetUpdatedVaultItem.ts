@@ -1,4 +1,4 @@
-import { Toast, showToast } from "@raycast/api";
+import { Toast, showToast } from "@vicinae/api";
 import { useVaultItemSubscriber } from "~/components/searchVault/context/vaultListeners";
 import { SENSITIVE_VALUE_PLACEHOLDER } from "~/constants/general";
 import { useBitwarden } from "~/context/bitwarden";

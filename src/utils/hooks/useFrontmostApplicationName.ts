@@ -1,4 +1,4 @@
-import { getFrontmostApplication } from "@raycast/api";
+import { getFrontmostApplication } from "@vicinae/api";
 import { useEffect, useState } from "react";
 
 export default function useFrontmostApplicationName() {

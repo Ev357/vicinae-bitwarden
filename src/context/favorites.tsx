@@ -1,4 +1,4 @@
-import { LocalStorage } from "@raycast/api";
+import { LocalStorage } from "@vicinae/api";
 import { Dispatch, SetStateAction, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { VaultLoadingFallback } from "~/components/searchVault/VaultLoadingFallback";
 import { LOCAL_STORAGE_KEY } from "~/constants/general";

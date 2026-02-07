@@ -1,4 +1,4 @@
-import { Clipboard, Icon, showToast, Toast } from "@raycast/api";
+import { Clipboard, Icon, showToast, Toast } from "@vicinae/api";
 import { capitalize } from "~/utils/strings";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
 import ActionWithReprompt from "~/components/actions/ActionWithReprompt";
@@ -32,7 +32,7 @@ function CopyObjectStringFieldsActions<TValue extends Constraint>({
       const value = await getUpdatedVaultItem(selectedItem, (item) => selector(item)?.[field], `Getting ${field}...`);
       if (typeof value !== "string") throw new Error(`Value of ${field} is not a string`);
       if (value) {
-        await Clipboard.copy(value, { transient: getTransientCopyPreference("other") });
+        await Clipboard.copy(value, { concealed: getTransientCopyPreference("other") });
         await showCopySuccessMessage(`Copied ${label} to clipboard`);
       }
     } catch (error) {
@@ -51,7 +51,7 @@ function CopyObjectStringFieldsActions<TValue extends Constraint>({
           <ActionWithReprompt
             key={`${index}-${key}`}
             title={`Copy ${label}`}
-            icon={Icon.Clipboard}
+            icon={Icon.CopyClipboard}
             onAction={handleCopyField(key, label)}
             repromptDescription={`Copying the ${label} of <${selectedItem.name}>`}
           />

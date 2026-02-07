@@ -1,4 +1,4 @@
-import { Clipboard, Icon, showToast, Toast } from "@raycast/api";
+import { Clipboard, Icon, showToast, Toast } from "@vicinae/api";
 import ActionWithReprompt from "~/components/actions/ActionWithReprompt";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
 import { getTransientCopyPreference } from "~/utils/preferences";
@@ -16,7 +16,7 @@ function CopyPasswordAction() {
     try {
       const password = await getUpdatedVaultItem(selectedItem, (item) => item.login?.password, "Getting password...");
       if (password) {
-        await Clipboard.copy(password, { transient: getTransientCopyPreference("password") });
+        await Clipboard.copy(password, { concealed: getTransientCopyPreference("password") });
         await showCopySuccessMessage("Copied password to clipboard");
       }
     } catch (error) {

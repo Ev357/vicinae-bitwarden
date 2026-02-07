@@ -1,4 +1,4 @@
-import { Action, Icon, Toast, open, showToast } from "@raycast/api";
+import { Action, Icon, Toast, open, showToast } from "@vicinae/api";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
 import useGetUpdatedVaultItem from "~/components/searchVault/utils/useGetUpdatedVaultItem";
 import { Item } from "~/types/vault";
@@ -24,8 +24,8 @@ function OpenUrlInBrowserAction() {
     <Action
       title="Open in Browser"
       onAction={handleOpenUrlInBrowser}
-      icon={Icon.Globe}
-      shortcut={{ macOS: { key: "o", modifiers: ["opt"] }, Windows: { key: "o", modifiers: ["alt"] } }}
+      icon={Icon.Globe01}
+      shortcut={{ key: "o", modifiers: ["cmd"] }}
     />
   );
 }

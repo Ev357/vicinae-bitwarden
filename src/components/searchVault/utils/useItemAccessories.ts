@@ -1,4 +1,4 @@
-import { Color, Icon, List } from "@raycast/api";
+import { Color, Icon, List } from "@vicinae/api";
 import { useMemo } from "react";
 import { ITEM_TYPE_TO_ICON_MAP } from "~/constants/general";
 import { ITEM_TYPE_TO_LABEL } from "~/constants/labels";

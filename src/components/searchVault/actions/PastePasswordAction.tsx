@@ -1,4 +1,4 @@
-import { Clipboard, Icon, Toast, showToast } from "@raycast/api";
+import { Clipboard, Icon, Toast, showToast } from "@vicinae/api";
 import ActionWithReprompt from "~/components/actions/ActionWithReprompt";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
 import useGetUpdatedVaultItem from "~/components/searchVault/utils/useGetUpdatedVaultItem";
@@ -25,7 +25,7 @@ function PastePasswordAction() {
   return (
     <ActionWithReprompt
       title={actionTitle}
-      icon={Icon.Window}
+      icon={Icon.AppWindow}
       onAction={pastePassword}
       repromptDescription={`Pasting the password of <${selectedItem.name}>`}
     />

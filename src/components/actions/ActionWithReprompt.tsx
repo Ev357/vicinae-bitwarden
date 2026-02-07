@@ -1,8 +1,9 @@
-import { Action } from "@raycast/api";
+import { Action } from "@vicinae/api";
+import type { ComponentProps } from "react";
 import { useSelectedVaultItem } from "~/components/searchVault/context/vaultItem";
 import useReprompt from "~/utils/hooks/useReprompt";
 
-export type ActionWithRepromptProps = Omit<Action.Props, "onAction"> & {
+export type ActionWithRepromptProps = Omit<ComponentProps<typeof Action>, "onAction"> & {
   repromptDescription?: string;
   onAction: () => void | Promise<void>;
 };

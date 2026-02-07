@@ -1,4 +1,4 @@
-import { LocalStorage } from "@raycast/api";
+import { LocalStorage } from "@vicinae/api";
 import { pbkdf2 } from "crypto";
 import { LOCAL_STORAGE_KEY } from "~/constants/general";
 import { DEFAULT_PASSWORD_OPTIONS, REPROMPT_HASH_SALT } from "~/constants/passwords";

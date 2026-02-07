@@ -1,4 +1,4 @@
-import { Action, Alert, Clipboard, Icon, Toast, confirmAlert, showToast } from "@raycast/api";
+import { Action, Alert, Clipboard, Icon, Toast, confirmAlert, showToast } from "@vicinae/api";
 import { capturedExceptions } from "~/utils/development";
 
 function CopyRuntimeErrorLog() {

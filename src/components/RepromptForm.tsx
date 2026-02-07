@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Form } from "@raycast/api";
+import { Action, ActionPanel, Form } from "@vicinae/api";
 
 export type RepromptFormProps = {
   description: string;
@@ -8,7 +8,8 @@ export type RepromptFormProps = {
 const RepromptForm = (props: RepromptFormProps) => {
   const { description, onConfirm } = props;
 
-  function onSubmit(values: { password: string }) {
+  function onSubmit(values: Form.Values) {
+    // @ts-expect-error
     onConfirm(values.password);
   }
 

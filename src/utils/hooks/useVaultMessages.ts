@@ -1,4 +1,4 @@
-import { Alert, closeMainWindow, confirmAlert, Icon, popToRoot } from "@raycast/api";
+import { Alert, closeMainWindow, confirmAlert, Icon, popToRoot } from "@vicinae/api";
 import { useEffect, useState } from "react";
 import { useBitwarden } from "~/context/bitwarden";
 import { VaultState } from "~/types/general";
@@ -32,7 +32,7 @@ function useVaultMessages() {
     } else if ((!serverUrl && shouldShowServer) || (serverUrl && !shouldShowServer)) {
       // Hosted state not in sync with CLI (we don't check for equality)
       void confirmAlert({
-        icon: Icon.ExclamationMark,
+        icon: Icon.Exclamationmark,
         title: "Restart Required",
         message: "Bitwarden server URL preference has been changed since the extension was opened.",
         primaryAction: {

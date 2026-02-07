@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
   Action,
   ActionPanel,
-  BrowserExtension,
   Clipboard,
   Color,
   environment,
@@ -12,7 +11,8 @@ import {
   List,
   showToast,
   Toast,
-} from "@raycast/api";
+} from "@vicinae/api";
+import { BrowserExtension } from "@raycast/api";
 import { usePromise } from "@raycast/utils";
 
 import RootErrorBoundary from "~/components/RootErrorBoundary";
@@ -29,7 +29,7 @@ import { getTransientCopyPreference } from "~/utils/preferences";
 import { showCopySuccessMessage } from "~/utils/clipboard";
 import { captureException } from "~/utils/development";
 import useFrontmostApplicationName from "~/utils/hooks/useFrontmostApplicationName";
-import { ActionWithReprompt, DebuggingBugReportingActionSection, VaultActionsSection } from "~/components/actions";
+import { ActionWithReprompt, VaultActionsSection } from "~/components/actions";
 import { Err, Ok, Result, tryCatch } from "~/utils/errors";
 import { useVaultSearch } from "~/utils/search";
 import ListFolderDropdown from "~/components/ListFolderDropdown";
@@ -174,7 +174,6 @@ function CommonActions() {
   return (
     <>
       <VaultActionsSection />
-      <DebuggingBugReportingActionSection />
     </>
   );
 }
@@ -198,12 +197,12 @@ function CopyCodeAction() {
   const copy = async () => {
     const code = await getCode();
     if (code) {
-      await Clipboard.copy(code, { transient: getTransientCopyPreference("other") });
+      await Clipboard.copy(code, { concealed: getTransientCopyPreference("other") });
       await showCopySuccessMessage("Copied code to clipboard");
     }
   };
 
-  return <Action title="Copy Code" onAction={copy} icon={Icon.Clipboard} />;
+  return <Action title="Copy Code" onAction={copy} icon={Icon.CopyClipboard} />;
 }
 
 function PasteCodeAction() {
@@ -221,7 +220,7 @@ function PasteCodeAction() {
     <Action
       title={frontmostAppName ? `Paste Code into ${frontmostAppName}` : "Paste Code"}
       onAction={paste}
-      icon={Icon.Window}
+      icon={Icon.AppWindow}
     />
   );
 }
